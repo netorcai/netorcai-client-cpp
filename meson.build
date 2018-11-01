@@ -1,13 +1,16 @@
-project('netorcai-client', 'cpp', version: '1.0.0-dev')
+project('netorcai-client', 'cpp',
+    version: '1.0.0-dev',
+    default_options: ['cpp_std=c++11'])
 
 src = [
-    'src/client.hpp',
-    'src/client.cpp',
-    'src/message.hpp',
-    'src/message.cpp',
+    'src/netorcai-client-cpp/client.hpp',
+    'src/netorcai-client-cpp/client.cpp',
+    'src/netorcai-client-cpp/error.hpp',
+    'src/netorcai-client-cpp/message.hpp',
+    'src/netorcai-client-cpp/message.cpp',
 ]
 
-incdir = include_directories('src')
+incdir = include_directories('src/netorcai-client-cpp')
 
 lib = library('netorcai-client',
     src,
@@ -16,8 +19,10 @@ lib = library('netorcai-client',
 )
 
 install_headers(
-    'src/client.hpp',
-    'src/message.hpp'
+    'src/netorcai-client-cpp/client.hpp',
+    'src/netorcai-client-cpp/error.hpp',
+    'src/netorcai-client-cpp/message.hpp',
+    subdir: 'netorcai-client-cpp'
 )
 
 pkgc = import('pkgconfig')
@@ -26,3 +31,26 @@ pkgc.generate(name: 'netorcai-client-cpp',
     version: meson.project_version(),
     description: 'A netorcai client library.'
 )
+
+# Unit tests.
+test_incdir = include_directories('test', 'src')
+test_src = [
+    'test/catch.hpp',
+    'test/error.cpp',
+    'test/main.cpp'
+]
+
+unittest_debug = executable('unittest',
+    test_src,
+    override_options: ['b_ndebug=false'],
+    include_directories: [test_incdir]
+)
+test('unittest', unittest_debug)
+
+unittest_ndebug = executable('unittest-NDEBUG',
+    test_src,
+    override_options: ['b_ndebug=true'],
+    include_directories: [test_incdir]
+)
+test('unittest (NDEBUG)', unittest_ndebug)
+
