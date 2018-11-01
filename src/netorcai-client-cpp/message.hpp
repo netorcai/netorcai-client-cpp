@@ -14,3 +14,5 @@ struct PlayerInfo
 };
 
 void parsePlayerInfo(const rapidjson::Value & json, PlayerInfo & info);
+
+int useless_function(int i);
