@@ -1,0 +1,26 @@
+language: nix
+nix: 2.1.1
+
+script:
+  # install netorcai
+  - nix-env -f https://github.com/netorcai/pkgs/archive/master.tar.gz -iA netorcai_dev
+  - netorcai --version
+
+  # install gcc, meson and ninja
+  - nix-env -f https://github.com/NixOS/nixpkgs/archive/18.09.tar.gz -iA gcc meson ninja
+  - gcc --version
+  - gcov --version
+  - meson --version
+  - ninja --version
+
+  # build the project
+  - meson build
+  - cd build
+  - ninja
+
+  # run tests
+  - ninja test
+
+  # get coverage results
+  - gcov netorcai-client@sha/*.gcda || true
+  - cat *.gcov || true
