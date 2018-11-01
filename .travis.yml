@@ -13,6 +13,9 @@ script:
   - meson --version
   - ninja --version
 
+  # install rapidjson
+  - nix-env -f https://github.com/NixOS/nixpkgs/archive/18.09.tar.gz -iA rapidjson
+
   # build the project
   - meson build
   - cd build
