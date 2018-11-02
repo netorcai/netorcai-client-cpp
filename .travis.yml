@@ -8,4 +8,4 @@ script:
 
   # build the up-to-date version of this project
   - nix-build https://github.com/netorcai/pkgs/archive/master.tar.gz -A netorcai_client_cpp_dev
-  - tree result
+  - find result
