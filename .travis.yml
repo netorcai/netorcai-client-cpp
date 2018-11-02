@@ -7,5 +7,5 @@ script:
   - netorcai --version
 
   # build the up-to-date version of this project
-  - nix-build -f https://github.com/netorcai/pkgs/archive/master.tar.gz -A netorcai_client_cpp_dev
+  - nix-build https://github.com/netorcai/pkgs/archive/master.tar.gz -A netorcai_client_cpp_dev
   - tree result
