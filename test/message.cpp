@@ -1,8 +1,8 @@
-#include "catch.hpp"
+#include <gtest/gtest.h>
 
 #include <netorcai-client-cpp/message.hpp>
 
-TEST_CASE("useless function", "[message]")
+TEST(message, useless_function)
 {
-    CHECK_NOTHROW(useless_function(4), "");
+    EXPECT_EQ(useless_function(4), 4);
 }

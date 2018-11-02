@@ -1,4 +1,4 @@
-#include "catch.hpp"
+#include <gtest/gtest.h>
 
 #include <netorcai-client-cpp/error.hpp>
 
@@ -12,21 +12,19 @@ void assert_wrapper(bool pred)
     ASSERT(pred, "");
 }
 
-#include <stdio.h>
-
-TEST_CASE("ASSERT calls", "[error]")
+TEST(error, assert)
 {
     #ifdef NDEBUG
-        CHECK_NOTHROW(assert_wrapper(true), "ASSERT(true) should never throw");
-        CHECK_NOTHROW(assert_wrapper(false), "ASSERT(false) should NOT throw when NDEBUG is set");
+        EXPECT_NO_THROW(assert_wrapper(true));
+        EXPECT_NO_THROW(assert_wrapper(false));
     #else
-        CHECK_NOTHROW(assert_wrapper(true), "ASSERT(true) should never throw");
-        CHECK_THROWS(assert_wrapper(false), "ASSERT(false) should throw when NDEBUG is unset");
+        EXPECT_NO_THROW(assert_wrapper(true));
+        EXPECT_THROW(assert_wrapper(false), NetorcaiError);
     #endif
 }
 
-TEST_CASE("ENFORCE calls", "[error]")
+TEST(error, enforce)
 {
-    CHECK_NOTHROW(enforce_wrapper(true), "ENFORCE(true) should never throw");
-    CHECK_THROWS(enforce_wrapper(false), "ENFORCE(false) should always throw");
+    EXPECT_NO_THROW(enforce_wrapper(true));
+    EXPECT_THROW(enforce_wrapper(false), NetorcaiError);
 }

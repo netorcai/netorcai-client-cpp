@@ -12,7 +12,7 @@ src = [
 
 incdir = include_directories('src/netorcai-client-cpp')
 
-rapidjson = dependency('RapidJSON', version:'>=1.1.0')
+rapidjson = dependency('RapidJSON', version:'>=1.1.0', required: true)
 
 lib = library('netorcai-client',
     src,
@@ -36,27 +36,30 @@ pkgc.generate(name: 'netorcai-client-cpp',
 )
 
 # Unit tests.
+gtest = dependency('gtest', version: '>=1.8.0', main: true, required: false)
+
 test_incdir = include_directories('test', 'src')
 test_src = [
-    'test/catch.hpp',
     'test/error.cpp',
-    'test/main.cpp',
     'test/message.cpp'
 ]
 
-unittest_debug = executable('unittest',
-    test_src,
-    override_options: ['b_ndebug=false'],
-    include_directories: [test_incdir],
-    link_with: lib
-)
-test('unittest', unittest_debug)
+if gtest.found()
+    unittest_debug = executable('unittest',
+        test_src,
+        override_options: ['b_ndebug=false'],
+        dependencies: [gtest],
+        include_directories: [test_incdir],
+        link_with: lib
+    )
+    test('unittest', unittest_debug)
 
-unittest_ndebug = executable('unittest-NDEBUG',
-    test_src,
-    override_options: ['b_ndebug=true'],
-    include_directories: [test_incdir],
-    link_with: lib
-)
-test('unittest (NDEBUG)', unittest_ndebug)
-
+    unittest_ndebug = executable('unittest-NDEBUG',
+        test_src,
+        override_options: ['b_ndebug=true'],
+        dependencies: [gtest],
+        include_directories: [test_incdir],
+        link_with: lib
+    )
+    test('unittest (NDEBUG)', unittest_ndebug)
+endif
