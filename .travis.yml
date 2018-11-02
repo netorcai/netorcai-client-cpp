@@ -15,7 +15,7 @@ script:
   - pkg-config --version
 
   # build the project and run tests
-  - nix-shell -p rapidjson --command '(meson build && cd build && ninja test)'
+  - nix-shell -p rapidjson --command '(echo ${PKG_CONFIG_PATH} && meson build && cd build && ninja test)'
 
   # get coverage results
   - cd build
