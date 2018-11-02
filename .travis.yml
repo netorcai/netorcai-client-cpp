@@ -6,12 +6,13 @@ script:
   - nix-env -f https://github.com/netorcai/pkgs/archive/master.tar.gz -iA netorcai_dev
   - netorcai --version
 
-  # install gcc, meson and ninja
-  - nix-env -f https://github.com/NixOS/nixpkgs/archive/18.09.tar.gz -iA gcc meson ninja
+  # install gcc, meson, ninja and pkgconfig
+  - nix-env -f https://github.com/NixOS/nixpkgs/archive/18.09.tar.gz -iA gcc meson ninja pkgconfig
   - gcc --version
   - gcov --version
   - meson --version
   - ninja --version
+  - pkg-config --version
 
   # install rapidjson
   - nix-env -f https://github.com/NixOS/nixpkgs/archive/18.09.tar.gz -iA rapidjson
