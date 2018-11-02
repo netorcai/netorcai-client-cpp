@@ -6,18 +6,6 @@ script:
   - nix-env -f https://github.com/netorcai/pkgs/archive/master.tar.gz -iA netorcai_dev
   - netorcai --version
 
-  # install gcc, meson, ninja and pkgconfig
-  - nix-env -f https://github.com/NixOS/nixpkgs/archive/18.09.tar.gz -iA gcc meson ninja pkgconfig
-  - gcc --version
-  - gcov --version
-  - meson --version
-  - ninja --version
-  - pkg-config --version
-
-  # build the project and run tests
-  - nix-shell -p rapidjson --command '(echo ${PKG_CONFIG_PATH} && meson build && cd build && ninja test)'
-
-  # get coverage results
-  - cd build
-  - gcov netorcai-client@sha/*.gcda || true
-  - cat *.gcov || true
+  # build the up-to-date version of this project
+  - nix-build -f https://github.com/netorcai/pkgs/archive/master.tar.gz -A netorcai_client_cpp_dev
+  - tree result
