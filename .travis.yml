@@ -14,17 +14,10 @@ script:
   - ninja --version
   - pkg-config --version
 
-  # install rapidjson
-  - nix-env -f https://github.com/NixOS/nixpkgs/archive/18.09.tar.gz -iA rapidjson
-
-  # build the project
-  - meson build
-  - cd build
-  - ninja
-
-  # run tests
-  - ninja test
+  # build the project and run tests
+  - nix-shell -p rapidjson --command '(meson build && cd build && ninja test)'
 
   # get coverage results
+  - cd build
   - gcov netorcai-client@sha/*.gcda || true
   - cat *.gcov || true
