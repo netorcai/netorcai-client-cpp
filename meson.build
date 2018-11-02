@@ -10,23 +10,15 @@ src = [
     'src/netorcai-client-cpp/message.cpp',
 ]
 
-# Coverage: add missing flags
-# if meson.get_compiler('cpp').get_id() == 'gcc' and get_option('b_coverage')
-#     coverage_extra_cpp_flags = ['-O0', '-fprofile-arcs', '-ftest-coverage']
-#     coverage_extra_link_flags = ['-lgcov', '--coverage']
-# else
-#     coverage_extra_cpp_flags = ''
-#     coverage_extra_link_flags = ''
-# endif
-
 incdir = include_directories('src/netorcai-client-cpp')
+
+rapidjson = dependency('RapidJSON', version:'>=1.1.0')
 
 lib = library('netorcai-client',
     src,
     include_directories: [incdir],
-    install: true, install_dir: 'lib'
-    #cpp_args: coverage_extra_cpp_flags,
-    #link_args: coverage_extra_link_flags
+    install: true, install_dir: 'lib',
+    dependencies: [rapidjson]
 )
 
 install_headers(
