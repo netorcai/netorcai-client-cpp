@@ -10,6 +10,10 @@ script:
   # (this also populates the nix store with dependences)
   - nix-shell https://github.com/netorcai/pkgs/archive/master.tar.gz -A netorcai_client_cpp_dev --command 'meson build -Db_coverage=true'
 
+  # install some build dependencies in the current profile
+  - nix-env -f https://github.com/NixOS/nixpkgs/archive/18.09.tar.gz -iA ninja
+  - nix-env -f https://github.com/NixOS/nixpkgs/archive/18.09.tar.gz -i python3.6-gcovr-2.4
+
   # build and test the project manually
   - cd build
   - ninja
