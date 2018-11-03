@@ -6,8 +6,19 @@ script:
   - nix-env -f https://github.com/netorcai/pkgs/archive/master.tar.gz -iA netorcai_dev
   - netorcai --version
 
-  # build/test up-to-date version of this project
-  - nix-build https://github.com/netorcai/pkgs/archive/master.tar.gz -A netorcai_client_cpp_dev
+  # launch meson in a nix-shell so pkg-config detects dependencies
+  # (this also populates the nix store with dependences)
+  - nix-shell https://github.com/netorcai/pkgs/archive/master.tar.gz -A netorcai_client_cpp_dev --command 'meson build -Db_coverage=true'
 
-  # Print coverage report
-  - cat result/coverage.txt
+  # build and test the project manually
+  - cd build
+  - ninja
+  - ninja test
+  - ninja coverage-text
+  - cd ..
+
+  # print coverage report
+  - cat build/meson-logs.coverage.txt
+
+  # send coverage results to codecov.io
+  - bash <(curl -s https://codecov.io/bash)
