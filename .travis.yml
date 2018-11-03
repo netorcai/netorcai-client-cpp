@@ -9,6 +9,5 @@ script:
   # build/test up-to-date version of this project
   - nix-build https://github.com/netorcai/pkgs/archive/master.tar.gz -A netorcai_client_cpp_dev
 
-  # Send coverage results to coveralls.io
-  - nix-env -f https://github.com/NixOS/nixpkgs/archive/18.09.tar.gz -iA python36Packages.coveralls
-  - coveralls
+  # Print coverage report
+  - cat result/coverage.txt
