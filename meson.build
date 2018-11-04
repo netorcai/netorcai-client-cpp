@@ -36,7 +36,7 @@ pkgc.generate(name: 'netorcai-client-cpp',
 )
 
 # Unit tests.
-gtest = dependency('gtest', version: '>=1.8.0', main: true, required: false)
+gtest = dependency('gtest_main', version: '>=1.8.0', required: false)
 
 test_incdir = include_directories('test', 'src')
 test_src = [
