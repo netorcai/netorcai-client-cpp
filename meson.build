@@ -32,6 +32,7 @@ pkgc = import('pkgconfig')
 pkgc.generate(name: 'netorcai-client-cpp',
     libraries: lib,
     version: meson.project_version(),
+    requires: [rapidjson],
     description: 'A netorcai client library.'
 )
 
