@@ -13,6 +13,4 @@ struct PlayerInfo
     bool isConnected; /// Whether the player is currently connected or not
 };
 
-void parsePlayerInfo(const rapidjson::Value & json, PlayerInfo & info);
-
-int useless_function(int i);
+PlayerInfo parsePlayerInfo(const rapidjson::Value & json);

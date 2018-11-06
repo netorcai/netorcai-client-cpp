@@ -1,15 +1,13 @@
 #include "message.hpp"
 #include "error.hpp"
 
-void parsePlayerInfo(const rapidjson::Value & json, PlayerInfo & info)
+PlayerInfo parsePlayerInfo(const rapidjson::Value & json)
 {
-    info = info;
-}
+    PlayerInfo info;
+    info.playerID = json["player_id"].GetInt();
+    info.nickname = json["nickname"].GetString();
+    info.remoteAddress = json["remote_address"].GetString();
+    info.isConnected = json["is_connected"].GetBool();
 
-int useless_function(int i)
-{
-    if (i == 4)
-        return i;
-    else
-        return 4;
+    return info;
 }
