@@ -1,7 +1,10 @@
 #include "message.hpp"
 #include "error.hpp"
 
-PlayerInfo parsePlayerInfo(const nlohmann::json & object)
+namespace netorcai
+{
+
+PlayerInfo parsePlayerInfo(const netorcai::json & object)
 {
     PlayerInfo info;
     info.playerID = object["player_id"];
@@ -11,3 +14,5 @@ PlayerInfo parsePlayerInfo(const nlohmann::json & object)
 
     return info;
 }
+
+} // end of netorcai namespace

@@ -5,7 +5,7 @@
 #include <netorcai-client-cpp/message.hpp>
 
 using namespace std;
-using namespace nlohmann;
+using namespace netorcai;
 
 TEST(message, parsePlayerInfo)
 {

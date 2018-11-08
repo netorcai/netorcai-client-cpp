@@ -3,11 +3,14 @@
 #include <stdarg.h>
 #include <stdio.h>
 
-struct NetorcaiError : std::exception
+namespace netorcai
+{
+
+struct Error : std::exception
 {
     char text[1024];
 
-    NetorcaiError(char const* fmt, ...) __attribute__((format(printf,2,3))) {
+    Error(char const* fmt, ...) __attribute__((format(printf,2,3))) {
         va_list ap;
         va_start(ap, fmt);
         vsnprintf(text, sizeof text, fmt, ap);
@@ -17,20 +20,20 @@ struct NetorcaiError : std::exception
     char const* what() const throw() { return text; }
 };
 
+} // end of netorcai namespace
+
 /// Define an ENFORCE macro similar to D's enforce.
-#define ENFORCE(pred, fmt, ...) \
+#define NETORCAI_ENFORCE(pred, fmt, ...) \
     do { \
         if (false == (pred)) { \
-            throw NetorcaiError("%s:%d:%s assert failed: " fmt "\naborting", \
+            throw netorcai::Error("%s:%d:%s assert failed: " fmt "\naborting", \
                                 __FILE__, __LINE__, __func__,  ##__VA_ARGS__); \
         } \
     } while (0)
 
 /// Define an ASSERT macro similar to D's assert.
 #ifndef NDEBUG
-    #define ASSERT ENFORCE
+    #define NETORCAI_ASSERT NETORCAI_ENFORCE
 #else
-    #define ASSERT(pred, fmt, ...) do {} while (0)
+    #define NETORCAI_ASSERT(pred, fmt, ...) do {} while (0)
 #endif
-
-#define NOTHING() do {} while (0);

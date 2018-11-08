@@ -4,12 +4,12 @@
 
 void enforce_wrapper(bool pred)
 {
-    ENFORCE(pred, "");
+    NETORCAI_ENFORCE(pred, "");
 }
 
 void assert_wrapper(bool pred)
 {
-    ASSERT(pred, "");
+    NETORCAI_ASSERT(pred, "");
 }
 
 TEST(error, assert)
@@ -19,12 +19,12 @@ TEST(error, assert)
         EXPECT_NO_THROW(assert_wrapper(false));
     #else
         EXPECT_NO_THROW(assert_wrapper(true));
-        EXPECT_THROW(assert_wrapper(false), NetorcaiError);
+        EXPECT_THROW(assert_wrapper(false), netorcai::Error);
     #endif
 }
 
 TEST(error, enforce)
 {
     EXPECT_NO_THROW(enforce_wrapper(true));
-    EXPECT_THROW(enforce_wrapper(false), NetorcaiError);
+    EXPECT_THROW(enforce_wrapper(false), netorcai::Error);
 }
