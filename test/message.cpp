@@ -5,7 +5,7 @@
 #include <netorcai-client-cpp/message.hpp>
 
 using namespace std;
-using namespace rapidjson;
+using namespace nlohmann;
 
 TEST(message, parsePlayerInfo)
 {
@@ -15,10 +15,9 @@ TEST(message, parsePlayerInfo)
       "remote_address": "127.0.0.1:59840",
       "is_connected": true
     })";
-    Document d;
-    d.Parse(s.c_str());
+    json object = json::parse(s);
 
-    const PlayerInfo pinfo = parsePlayerInfo(d.GetObject());
+    const PlayerInfo pinfo = parsePlayerInfo(object);
     EXPECT_EQ(pinfo.playerID, 0);
     EXPECT_EQ(pinfo.nickname, "jugador");
     EXPECT_EQ(pinfo.remoteAddress, "127.0.0.1:59840");

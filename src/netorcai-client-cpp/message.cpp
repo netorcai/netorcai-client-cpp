@@ -1,13 +1,13 @@
 #include "message.hpp"
 #include "error.hpp"
 
-PlayerInfo parsePlayerInfo(const rapidjson::Value & json)
+PlayerInfo parsePlayerInfo(const nlohmann::json & object)
 {
     PlayerInfo info;
-    info.playerID = json["player_id"].GetInt();
-    info.nickname = json["nickname"].GetString();
-    info.remoteAddress = json["remote_address"].GetString();
-    info.isConnected = json["is_connected"].GetBool();
+    info.playerID = object["player_id"];
+    info.nickname = object["nickname"];
+    info.remoteAddress = object["remote_address"];
+    info.isConnected = object["is_connected"];
 
     return info;
 }

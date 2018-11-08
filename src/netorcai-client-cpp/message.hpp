@@ -2,7 +2,7 @@
 
 #include <string>
 
-#include <rapidjson/document.h>
+#include <nlohmann/json.hpp>
 
 /// Stores information about one player
 struct PlayerInfo
@@ -13,4 +13,4 @@ struct PlayerInfo
     bool isConnected; /// Whether the player is currently connected or not
 };
 
-PlayerInfo parsePlayerInfo(const rapidjson::Value & json);
+PlayerInfo parsePlayerInfo(const nlohmann::json & json);

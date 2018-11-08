@@ -2,3 +2,4 @@ build
 install
 coverage
 result
+subprojects/nlohmann-json-git
