@@ -20,20 +20,18 @@ TEST(error, assert)
     #else
         EXPECT_NO_THROW(assert_wrapper(true));
         EXPECT_THROW(assert_wrapper(false), netorcai::Error);
+        bool expected_path = false;
         try
         {
             assert_wrapper(false);
-            FAIL();
         }
         catch (const netorcai::Error & e)
         {
             std::string exception_msg = e.what();
             EXPECT_NE(exception_msg.find("assert failed"), std::string::npos);
+            expected_path = true;
         }
-        catch (...)
-        {
-            FAIL();
-        }
+        EXPECT_TRUE(expected_path);
     #endif
 }
 
@@ -41,18 +39,16 @@ TEST(error, enforce)
 {
     EXPECT_NO_THROW(enforce_wrapper(true));
     EXPECT_THROW(enforce_wrapper(false), netorcai::Error);
+    bool expected_path = false;
     try
     {
         enforce_wrapper(false);
-        FAIL();
     }
     catch (const netorcai::Error & e)
     {
         std::string exception_msg = e.what();
         EXPECT_NE(exception_msg.find("assert failed"), std::string::npos);
+        expected_path = true;
     }
-    catch (...)
-    {
-        FAIL();
-    }
+    EXPECT_TRUE(expected_path);
 }
