@@ -15,17 +15,20 @@ Client::~Client()
 
 }
 
+/// Connect to a remote endpoint. May throw Error.
 void Client::connect(const std::string & hostname, unsigned short port)
 {
     auto status = _socket.connect(sf::IpAddress(hostname), port, sf::milliseconds(500));
     NETORCAI_ENFORCE(status == sf::Socket::Done, "Cannot connect to %s:%hu", hostname.c_str(), port);
 }
 
+/// Close the socket.
 void Client::close()
 {
     _socket.disconnect();
 }
 
+/// Reads a string message on the client socket. May throw Error.
 std::string Client::recvString()
 {
     // Read content size
@@ -53,11 +56,13 @@ std::string Client::recvString()
     return content;
 }
 
+/// Reads a JSON message on the client socket. May throw Error.
 json Client::recvJson()
 {
     return json::parse(recvString());
 }
 
+/// Reads a LOGIN_ACK message on the client socket. May throw Error.
 LoginAckMessage Client::readLoginAck()
 {
     json msg = recvJson();
@@ -69,6 +74,7 @@ LoginAckMessage Client::readLoginAck()
         throw Error("Unexpected message received: %s", ((std::string)msg["message_type"]).c_str());
 }
 
+/// Reads a GAME_STARTS message on the client socket. May throw Error.
 GameStartsMessage Client::readGameStarts()
 {
     json msg = recvJson();
@@ -80,6 +86,7 @@ GameStartsMessage Client::readGameStarts()
         throw Error("Unexpected message received: %s", ((std::string)msg["message_type"]).c_str());
 }
 
+/// Reads a TURN message on the client socket. May throw Error.
 TurnMessage Client::readTurn()
 {
     json msg = recvJson();
@@ -93,6 +100,7 @@ TurnMessage Client::readTurn()
         throw Error("Unexpected message received: %s", ((std::string)msg["message_type"]).c_str());
 }
 
+/// Reads a GAME_ENDS message on the client socket. May throw Error.
 GameEndsMessage Client::readGameEnds()
 {
     json msg = recvJson();
@@ -104,6 +112,7 @@ GameEndsMessage Client::readGameEnds()
         throw Error("Unexpected message received: %s", ((std::string)msg["message_type"]).c_str());
 }
 
+/// Reads a DO_INIT message on the client socket. May throw Error.
 DoInitMessage Client::readDoInit()
 {
     json msg = recvJson();
@@ -115,6 +124,7 @@ DoInitMessage Client::readDoInit()
         throw Error("Unexpected message received: %s", ((std::string)msg["message_type"]).c_str());
 }
 
+/// Reads a DO_TURN message on the client socket. May throw Error.
 DoTurnMessage Client::readDoTurn()
 {
     json msg = recvJson();
@@ -126,6 +136,7 @@ DoTurnMessage Client::readDoTurn()
         throw Error("Unexpected message received: %s", ((std::string)msg["message_type"]).c_str());
 }
 
+/// Send a string message on the client socket. May throw Error.
 void Client::sendString(const std::string & message)
 {
     NETORCAI_ENFORCE(message.size() < 65536, "message is too big (%zu bytes)", message.size());
@@ -150,11 +161,13 @@ void Client::sendString(const std::string & message)
     NETORCAI_ENFORCE(sentSize == contentSize, "Cannot send content.");
 }
 
+/// Send a JSON message on the client socket. May throw Error.
 void Client::sendJson(const json & message)
 {
     sendString(message.dump());
 }
 
+/// Send a LOGIN message on the client socket. May throw Error.
 void Client::sendLogin(const std::string & nickname, const std::string & role)
 {
     json msg;
@@ -165,6 +178,7 @@ void Client::sendLogin(const std::string & nickname, const std::string & role)
     sendJson(msg);
 }
 
+/// Send a TURN_ACK message on the client socket. May throw Error.
 void Client::sendTurnAck(int turnNumber, const json & actions)
 {
     json msg;
@@ -175,6 +189,7 @@ void Client::sendTurnAck(int turnNumber, const json & actions)
     sendJson(msg);
 }
 
+/// Send a DO_INIT_ACK message on the client socket. May throw Error.
 void Client::sendDoInitAck(const json & initialGameState)
 {
     json msg;
@@ -184,6 +199,7 @@ void Client::sendDoInitAck(const json & initialGameState)
     sendJson(msg);
 }
 
+/// Send a DO_TURN_ACK message on the client socket. May throw Error.
 void Client::sendDoTurnAck(const json & gameState, int winnerPlayerID)
 {
     json msg;

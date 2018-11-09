@@ -10,6 +10,7 @@
 namespace netorcai
 {
 
+/// Netorcai metaprotocol client class (C++ version)
 class Client
 {
 private:
