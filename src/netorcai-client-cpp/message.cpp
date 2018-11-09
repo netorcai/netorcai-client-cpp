@@ -4,6 +4,7 @@
 namespace netorcai
 {
 
+/// Parses a player information (in GAME_STARTS and GAME_ENDS messages)
 PlayerInfo parsePlayerInfo(const netorcai::json & object)
 {
     PlayerInfo info;
@@ -15,6 +16,7 @@ PlayerInfo parsePlayerInfo(const netorcai::json & object)
     return info;
 }
 
+/// Parses several player information (in GAME_STARTS and GAME_ENDS messages)
 std::vector<PlayerInfo> parsePlayersInfo(const netorcai::json & array)
 {
     int arraySize = array.size();
@@ -30,6 +32,7 @@ std::vector<PlayerInfo> parsePlayersInfo(const netorcai::json & array)
     return infos;
 }
 
+/// Parses a GAME_STARTS metaprotocol message
 GameStartsMessage parseGameStartsMessage(const netorcai::json & object)
 {
     GameStartsMessage m;
@@ -47,6 +50,7 @@ GameStartsMessage parseGameStartsMessage(const netorcai::json & object)
     return m;
 }
 
+/// Parses a GAME_ENDS metaprotocol message
 GameEndsMessage parseGameEndsMessage(const json & object)
 {
     GameEndsMessage m;
@@ -58,6 +62,7 @@ GameEndsMessage parseGameEndsMessage(const json & object)
     return m;
 }
 
+/// Parses a TURN metaprotocol message
 TurnMessage parseTurnMessage(const json & object)
 {
     TurnMessage m;
@@ -70,6 +75,7 @@ TurnMessage parseTurnMessage(const json & object)
     return m;
 }
 
+/// Parses a DO_INIT metaprotocol message
 DoInitMessage parseDoInitMessage(const json & object)
 {
     DoInitMessage m;
@@ -79,6 +85,7 @@ DoInitMessage parseDoInitMessage(const json & object)
     return m;
 }
 
+/// Parses the playerActions field of a DO_TURN metaprotocol message
 PlayerActions parsePlayerActions(const json & object)
 {
     PlayerActions pa;
@@ -91,6 +98,7 @@ PlayerActions parsePlayerActions(const json & object)
     return pa;
 }
 
+/// Parses a DO_TURN metaprotocol message
 DoTurnMessage parseDoTurnMessage(const json & object)
 {
     DoTurnMessage m;
