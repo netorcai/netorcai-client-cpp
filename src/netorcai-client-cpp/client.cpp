@@ -58,6 +58,74 @@ json Client::recvJson()
     return json::parse(recvString());
 }
 
+LoginAckMessage Client::readLoginAck()
+{
+    json msg = recvJson();
+    if (msg["message_type"] == "LOGIN_ACK")
+        return LoginAckMessage();
+    else if (msg["message_type"] == "KICK")
+        throw Error("Kicked from netorai. Reason: %s", ((std::string)msg["kick_reason"]).c_str());
+    else
+        throw Error("Unexpected message received: %s", ((std::string)msg["message_type"]).c_str());
+}
+
+GameStartsMessage Client::readGameStarts()
+{
+    json msg = recvJson();
+    if (msg["message_type"] == "GAME_STARTS")
+        return parseGameStartsMessage(msg);
+    else if (msg["message_type"] == "KICK")
+        throw Error("Kicked from netorai. Reason: %s", ((std::string)msg["kick_reason"]).c_str());
+    else
+        throw Error("Unexpected message received: %s", ((std::string)msg["message_type"]).c_str());
+}
+
+TurnMessage Client::readTurn()
+{
+    json msg = recvJson();
+    if (msg["message_type"] == "TURN")
+        return parseTurnMessage(msg);
+    if (msg["message_type"] == "GAME_ENDS")
+        throw Error("Game over!");
+    else if (msg["message_type"] == "KICK")
+        throw Error("Kicked from netorai. Reason: %s", ((std::string)msg["kick_reason"]).c_str());
+    else
+        throw Error("Unexpected message received: %s", ((std::string)msg["message_type"]).c_str());
+}
+
+GameEndsMessage Client::readGameEnds()
+{
+    json msg = recvJson();
+    if (msg["message_type"] == "GAME_ENDS")
+        return parseGameEndsMessage(msg);
+    else if (msg["message_type"] == "KICK")
+        throw Error("Kicked from netorai. Reason: %s", ((std::string)msg["kick_reason"]).c_str());
+    else
+        throw Error("Unexpected message received: %s", ((std::string)msg["message_type"]).c_str());
+}
+
+DoInitMessage Client::readDoInit()
+{
+    json msg = recvJson();
+    if (msg["message_type"] == "DO_INIT")
+        return parseDoInitMessage(msg);
+    else if (msg["message_type"] == "KICK")
+        throw Error("Kicked from netorai. Reason: %s", ((std::string)msg["kick_reason"]).c_str());
+    else
+        throw Error("Unexpected message received: %s", ((std::string)msg["message_type"]).c_str());
+}
+
+DoTurnMessage Client::readDoTurn()
+{
+    json msg = recvJson();
+    if (msg["message_type"] == "DO_TURN")
+        return parseDoTurnMessage(msg);
+    else if (msg["message_type"] == "KICK")
+        throw Error("Kicked from netorai. Reason: %s", ((std::string)msg["kick_reason"]).c_str());
+    else
+        throw Error("Unexpected message received: %s", ((std::string)msg["message_type"]).c_str());
+}
+
 void Client::sendString(const std::string & message)
 {
     NETORCAI_ENFORCE(message.size() < 65536, "message is too big (%zu bytes)", message.size());
@@ -85,6 +153,45 @@ void Client::sendString(const std::string & message)
 void Client::sendJson(const json & message)
 {
     sendString(message.dump());
+}
+
+void Client::sendLogin(const std::string & nickname, const std::string & role)
+{
+    json msg;
+    msg["message_type"] = "LOGIN";
+    msg["nickname"] = nickname;
+    msg["role"] = role;
+
+    sendJson(msg);
+}
+
+void Client::sendTurnAck(int turnNumber, const json & actions)
+{
+    json msg;
+    msg["message_type"] = "TURN_ACK";
+    msg["turn_number"] = turnNumber;
+    msg["actions"] = actions;
+
+    sendJson(msg);
+}
+
+void Client::sendDoInitAck(const json & initialGameState)
+{
+    json msg;
+    msg["message_type"] = "DO_INIT_ACK";
+    msg["initial_game_state"] = initialGameState;
+
+    sendJson(msg);
+}
+
+void Client::sendDoTurnAck(const json & gameState, int winnerPlayerID)
+{
+    json msg;
+    msg["message_type"] = "DO_TURN_ACK";
+    msg["winner_player_id"] = winnerPlayerID;
+    msg["game_state"] = gameState;
+
+    sendJson(msg);
 }
 
 } // end of netorcai namespace
