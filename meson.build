@@ -10,7 +10,7 @@ src = [
     'src/netorcai-client-cpp/message.cpp',
 ]
 
-incdir = include_directories('src/netorcai-client-cpp')
+incdir = include_directories('src')
 
 # Search for nlohmann_json in the system.
 # Use the system version if posible, or get/use the latest release otherwise.

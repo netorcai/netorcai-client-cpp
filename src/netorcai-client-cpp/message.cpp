@@ -1,5 +1,5 @@
-#include "message.hpp"
-#include "error.hpp"
+#include <netorcai-client-cpp/message.hpp>
+#include <netorcai-client-cpp/error.hpp>
 
 namespace netorcai
 {

@@ -3,7 +3,7 @@
 #include <string>
 #include <vector>
 
-#include "json.hpp"
+#include <netorcai-client-cpp/json.hpp>
 
 namespace netorcai
 {
