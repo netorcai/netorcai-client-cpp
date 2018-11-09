@@ -1,6 +1,6 @@
 project('netorcai-client', 'cpp',
     version: '1.0.0-dev',
-    default_options: ['cpp_std=c++11'])
+    default_options: ['cpp_std=c++2a'])
 
 src = [
     'src/netorcai-client-cpp/client.hpp',
@@ -12,16 +12,18 @@ src = [
 
 incdir = include_directories('src')
 
+sfml_network_dep = dependency('sfml-network', required: true)
+
 # Search for nlohmann_json in the system.
 # Use the system version if posible, or get/use the latest release otherwise.
 nlohmann_json_dep = dependency('nlohmann_json', required: false)
 
 if nlohmann_json_dep.found()
-    pkgconfig_dependencies = [nlohmann_json_dep]
+    pkgconfig_dependencies = [sfml_network_dep, nlohmann_json_dep]
 else
     nlohmann_json_proj = subproject('nlohmann_json')
     nlohmann_json_dep = nlohmann_json_proj.get_variable('nlohmann_json_dep')
-    pkgconfig_dependencies = []
+    pkgconfig_dependencies = [sfml_network_dep]
     warning('If installing netorcai-client-cpp from this build, the installed netorcai-client-cpp.pc will NOT require nlohmann_json. This means netorcai-client-cpp.pc will be invalid if you explicitly uninstall nlohmann_json afterwards. If you prefer to generate a fully valid netorcai-client-cpp.pc, make sure that nlohmann_json is installed in your system (and that nlohmann_json.pc is reachable by pkg-config) before calling meson')
 endif
 
@@ -29,14 +31,14 @@ netorcai_client_cpp = library('netorcai-client',
     src,
     include_directories: [incdir],
     install: true, install_dir: 'lib',
-    dependencies: [nlohmann_json_dep]
+    dependencies: [nlohmann_json_dep, sfml_network_dep]
 )
 
 netorcai_client_cpp_dep = declare_dependency(
     include_directories: [incdir],
     link_with: netorcai_client_cpp,
     sources: src,
-    dependencies: [nlohmann_json_dep]
+    dependencies: [nlohmann_json_dep, sfml_network_dep]
 )
 
 install_headers(
