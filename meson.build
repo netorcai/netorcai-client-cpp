@@ -1,6 +1,6 @@
 project('netorcai-client', 'cpp',
     version: '1.0.0-dev',
-    default_options: ['cpp_std=c++11'])
+    default_options: ['cpp_std=c++17'])
 
 src = [
     'src/netorcai-client-cpp/client.hpp',
