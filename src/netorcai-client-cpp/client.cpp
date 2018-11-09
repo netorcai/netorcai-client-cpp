@@ -1,7 +1,7 @@
 #include <netorcai-client-cpp/client.hpp>
 #include <netorcai-client-cpp/error.hpp>
 
-#include <type_traits>
+#include <netorcai-client-cpp/endian.hpp>
 #include <utility>
 
 #include <SFML/Network/IpAddress.hpp>
