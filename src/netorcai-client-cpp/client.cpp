@@ -36,7 +36,7 @@ std::string Client::recvString()
     NETORCAI_ENFORCE(receivedSize == 2, "Cannot read content size.");
 
     // Convert from little endian to native endian if needed
-    if constexpr (std::endian::native == std::endian::big)
+    if constexpr (netorcai::endian::native == netorcai::endian::big)
     {
         std::swap(contentSizeBuf[0], contentSizeBuf[1]);
     }
@@ -67,7 +67,7 @@ void Client::sendString(const std::string & message)
     *((uint16_t*)contentSizeBuf) = contentSize;
 
     // Convert from native endian to little endian if needed
-    if constexpr (std::endian::native == std::endian::big)
+    if constexpr (netorcai::endian::native == netorcai::endian::big)
     {
         std::swap(contentSizeBuf[0], contentSizeBuf[1]);
     }
