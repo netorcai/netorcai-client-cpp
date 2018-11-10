@@ -6,6 +6,7 @@
 #include <unistd.h>
 
 #include <netorcai-client-cpp/client.hpp>
+#include <netorcai-client-cpp/error.hpp>
 
 using namespace std;
 using namespace netorcai;
@@ -78,6 +79,29 @@ TEST(client, everythingGoesWell)
     gameLogic.sendDoTurnAck(json::parse(R"({"all_clients": {"gl": "C++"}})"), -1);
 
     player.readGameEnds();
+    int ret = pclose(n);
+    EXPECT_NE(ret, -1) << "Error while calling pclose on netorcai's process";
+}
+
+void getClientKicked(Client & client)
+{
+    client.connect();
+    client.sendString("¿qué?");
+}
+
+TEST(client, kickedInsteadOfExpectedMessage)
+{
+    FILE * n = launchNetorcaiWaitListening(10, 20); // not autostarting here
+
+    Client c;
+    getClientKicked(c); EXPECT_THROW(c.readLoginAck(), netorcai::Error);
+    getClientKicked(c); EXPECT_THROW(c.readGameStarts(), netorcai::Error);
+    getClientKicked(c); EXPECT_THROW(c.readTurn(), netorcai::Error);
+    getClientKicked(c); EXPECT_THROW(c.readGameEnds(), netorcai::Error);
+    getClientKicked(c); EXPECT_THROW(c.readDoInit(), netorcai::Error);
+    getClientKicked(c); EXPECT_THROW(c.readDoTurn(), netorcai::Error);
+
+    system("killall netorcai");
     int ret = pclose(n);
     EXPECT_NE(ret, -1) << "Error while calling pclose on netorcai's process";
 }
