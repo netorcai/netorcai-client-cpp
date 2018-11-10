@@ -105,3 +105,58 @@ TEST(client, kickedInsteadOfExpectedMessage)
     int ret = pclose(n);
     EXPECT_NE(ret, -1) << "Error while calling pclose on netorcai's process";
 }
+
+void getPlayerLogged(Client & client)
+{
+    client.connect();
+    client.sendLogin("I", "player");
+}
+
+TEST(client, unexpectedMessageButNotKICK)
+{
+    auto n = launchNetorcaiWaitListening(2, 0);
+
+    // LOGIN_ACK instead of something else
+    Client c;
+    getPlayerLogged(c); EXPECT_THROW(c.readGameStarts(), netorcai::Error);
+    getPlayerLogged(c); EXPECT_THROW(c.readTurn(), netorcai::Error);
+    getPlayerLogged(c); EXPECT_THROW(c.readGameEnds(), netorcai::Error);
+    getPlayerLogged(c); EXPECT_THROW(c.readDoInit(), netorcai::Error);
+    getPlayerLogged(c); EXPECT_THROW(c.readDoTurn(), netorcai::Error);
+    c.close();
+
+    // Start a game.
+    Client player1, player2, gl;
+    getPlayerLogged(player1); // Unexpected msg while reading LOGIN_ACK
+    getPlayerLogged(player2); // GAME_ENDS while reading TURN
+    gl.connect();
+    gl.sendLogin("gl", "game logic");
+
+    gl.readLoginAck();
+    player1.readLoginAck();
+    player2.readLoginAck();
+
+    // Game should start automatically as two players are connected (--autostart)
+    const DoInitMessage doInit = gl.readDoInit();
+    gl.sendDoInitAck(json::parse(R"({"all_clients": {"gl": "C++"}})"));
+    EXPECT_THROW(c.readLoginAck(), netorcai::Error);
+    player2.readGameStarts();
+
+    for (int i = 1; i < doInit.nbTurnsMax; i++)
+    {
+        gl.readDoTurn();
+        gl.sendDoTurnAck(json::parse(R"({"all_clients": {"gl": "C++"}})"), -1);
+
+        auto turn = player2.readTurn();
+        player2.sendTurnAck(turn.turnNumber, json::parse(R"([{"player": "C++"}])"));
+    }
+
+    gl.readDoTurn();
+    gl.sendDoTurnAck(json::parse(R"({"all_clients": {"gl": "C++"}})"), -1);
+
+    EXPECT_THROW(c.readTurn(), netorcai::Error);
+
+    system("killall netorcai");
+    int ret = pclose(n);
+    EXPECT_NE(ret, -1) << "Error while calling pclose on netorcai's process";
+}
