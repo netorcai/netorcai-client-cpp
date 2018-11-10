@@ -12,7 +12,7 @@ namespace netorcai
 
 Client::~Client()
 {
-
+    close();
 }
 
 /// Connect to a remote endpoint. May throw Error.
