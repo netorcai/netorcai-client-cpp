@@ -62,6 +62,7 @@ gtest_dep = dependency('gtest_main', version: '>=1.8.0', required: false)
 
 test_incdir = include_directories('test', 'src')
 test_src = [
+    'test/client.cpp',
     'test/error.cpp',
     'test/message.cpp'
 ]
@@ -73,7 +74,6 @@ if gtest_dep.found()
         dependencies: [gtest_dep, netorcai_client_cpp_dep],
         include_directories: [test_incdir]
     )
-    test('unittest', unittest_debug)
 
     unittest_ndebug = executable('unittest-NDEBUG',
         test_src,
@@ -81,5 +81,8 @@ if gtest_dep.found()
         dependencies: [gtest_dep, netorcai_client_cpp_dep],
         include_directories: [test_incdir]
     )
-    test('unittest (NDEBUG)', unittest_ndebug)
+
+    # not parallel because of netorcai's shared TCP port
+    test('unittest', unittest_debug, is_parallel : false)
+    test('unittest (NDEBUG)', unittest_ndebug, is_parallel : false)
 endif
