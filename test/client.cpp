@@ -137,7 +137,8 @@ TEST(client, unexpectedMessageButNotKICK)
     // Game should start automatically as two players are connected (--autostart)
     const DoInitMessage doInit = gl.readDoInit();
     gl.sendDoInitAck(json::parse(R"({"all_clients": {"gl": "C++"}})"));
-    EXPECT_THROW(c.readLoginAck(), netorcai::Error);
+
+    EXPECT_THROW(player1.readLoginAck(), netorcai::Error);
     player2.readGameStarts();
 
     for (int i = 1; i < doInit.nbTurnsMax; i++)
@@ -152,7 +153,7 @@ TEST(client, unexpectedMessageButNotKICK)
     gl.readDoTurn();
     gl.sendDoTurnAck(json::parse(R"({"all_clients": {"gl": "C++"}})"), -1);
 
-    EXPECT_THROW(c.readTurn(), netorcai::Error);
+    EXPECT_THROW(player2.readTurn(), netorcai::Error);
 
     system("killall netorcai");
     int ret = pclose(n);
