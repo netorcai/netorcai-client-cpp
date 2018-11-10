@@ -37,9 +37,7 @@ FILE * launchNetorcaiWaitListening(int nbPlayers, int nbVisus)
     ssize_t read = getline(&line, &len, netorcaiOutput);
     EXPECT_NE(read, -1) << "Cannot read netorcai's first output line";
     bool expected_first_line = (string::npos != ((string)line).find("Listening incoming connections"));
-    EXPECT_TRUE(expected_first_line) <<
-        "First netorcai's output is not about Listening. First line is printed below.\n" <<
-        line;
+    EXPECT_TRUE(expected_first_line) << "First netorcai's output is not about Listening incoming connections...";
 
     return netorcaiOutput;
 }
