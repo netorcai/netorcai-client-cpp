@@ -26,8 +26,7 @@ struct Error : std::exception
 #define NETORCAI_ENFORCE(pred, fmt, ...) \
     do { \
         if (false == (pred)) { \
-            throw netorcai::Error("%s:%d:%s assert failed: " fmt "\naborting", \
-                                __FILE__, __LINE__, __func__,  ##__VA_ARGS__); \
+            throw netorcai::Error(fmt, ##__VA_ARGS__); \
         } \
     } while (0)
 

@@ -4,12 +4,12 @@
 
 void enforce_wrapper(bool pred)
 {
-    NETORCAI_ENFORCE(pred, "");
+    NETORCAI_ENFORCE(pred, "enforce_wrapper");
 }
 
 void assert_wrapper(bool pred)
 {
-    NETORCAI_ASSERT(pred, "");
+    NETORCAI_ASSERT(pred, "assert_wrapper");
 }
 
 TEST(error, assert)
@@ -28,7 +28,7 @@ TEST(error, assert)
         catch (const netorcai::Error & e)
         {
             std::string exception_msg = e.what();
-            EXPECT_NE(exception_msg.find("assert failed"), std::string::npos);
+            EXPECT_NE(exception_msg.find("assert_wrapper"), std::string::npos);
             expected_path = true;
         }
         EXPECT_TRUE(expected_path);
@@ -47,7 +47,7 @@ TEST(error, enforce)
     catch (const netorcai::Error & e)
     {
         std::string exception_msg = e.what();
-        EXPECT_NE(exception_msg.find("assert failed"), std::string::npos);
+        EXPECT_NE(exception_msg.find("enforce_wrapper"), std::string::npos);
         expected_path = true;
     }
     EXPECT_TRUE(expected_path);
