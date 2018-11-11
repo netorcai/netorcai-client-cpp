@@ -12,5 +12,5 @@ Run instructions
 ----------------
 
 ```bash
-./build/hello-gl
+./build/hello-player
 ```
