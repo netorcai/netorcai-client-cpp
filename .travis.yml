@@ -15,3 +15,16 @@ script:
 
   # send coverage results to codecov.io
   - bash <(curl -s https://codecov.io/bash)
+
+  # build and run the example GL and player
+  - nix-shell https://github.com/netorcai/pkgs/archive/master.tar.gz -A netorcai_client_cpp_dev --command '(cd examples/hello-gl && meson build && cd build && ninja)'
+  - nix-shell https://github.com/netorcai/pkgs/archive/master.tar.gz -A netorcai_client_cpp_dev --command '(cd examples/hello-player && meson build && cd build && ninja)'
+  - nohup netorcai --autostart --nb-players-max 2 --nb-visus-max 0 --delay-first-turn=500 --delay-turns=500 --nb-turns-max=2 --simple-prompt &
+  - sleep 1
+  - ./examples/hello-gl/build/hello-gl &
+  - gl=$!
+  - ./examples/hello-player/build/hello-player &
+  - player1=$!
+  - ./examples/hello-player/build/hello-player &
+  - player2=$!
+  - wait ${player1} ${player2} ${gl}
