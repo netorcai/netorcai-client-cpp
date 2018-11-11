@@ -8,7 +8,7 @@ script:
 
   # launch meson in a nix-shell so pkg-config detects dependencies
   # (this also populates the nix store with dependences)
-  - nix-shell https://github.com/netorcai/pkgs/archive/master.tar.gz -A netorcai_client_cpp_dev --command '(meson build -Db_coverage=true && cd build && ninja && ninja test && ninja coverage-text)'
+  - nix-shell https://github.com/netorcai/pkgs/archive/master.tar.gz -A netorcai_client_cpp_dev --arg doTests true --command '(meson build -Db_coverage=true && cd build && ninja && ninja test && ninja coverage-text)'
 
   # print coverage report
   - cat build/meson-logs/coverage.txt
