@@ -16,6 +16,8 @@ Client::~Client()
 }
 
 /// Connect to a remote endpoint. May throw Error.
+/// @param hostname Endpoint's host name (e.g., localhost, 127.0.0.1...)
+/// @param port Endpoint's TCP port.
 void Client::connect(const std::string & hostname, unsigned short port)
 {
     auto status = _socket.connect(sf::IpAddress(hostname), port, sf::milliseconds(500));
@@ -29,6 +31,7 @@ void Client::close()
 }
 
 /// Reads a string message on the client socket. May throw Error.
+/// @return The message that has been read.
 std::string Client::recvString()
 {
     // Read content size
@@ -57,12 +60,14 @@ std::string Client::recvString()
 }
 
 /// Reads a JSON message on the client socket. May throw Error.
+/// @return The message that has been read.
 json Client::recvJson()
 {
     return json::parse(recvString());
 }
 
 /// Reads a LOGIN_ACK message on the client socket. May throw Error.
+/// @return The LOGIN_ACK message that has been read.
 LoginAckMessage Client::readLoginAck()
 {
     json msg = recvJson();
@@ -75,6 +80,7 @@ LoginAckMessage Client::readLoginAck()
 }
 
 /// Reads a GAME_STARTS message on the client socket. May throw Error.
+/// @return The GAME_STARTS message that has been read.
 GameStartsMessage Client::readGameStarts()
 {
     json msg = recvJson();
@@ -87,6 +93,7 @@ GameStartsMessage Client::readGameStarts()
 }
 
 /// Reads a TURN message on the client socket. May throw Error.
+/// @return The TURN message that has been read.
 TurnMessage Client::readTurn()
 {
     json msg = recvJson();
@@ -101,6 +108,7 @@ TurnMessage Client::readTurn()
 }
 
 /// Reads a GAME_ENDS message on the client socket. May throw Error.
+/// @return The GAME_ENDS message that has been read.
 GameEndsMessage Client::readGameEnds()
 {
     json msg = recvJson();
@@ -113,6 +121,7 @@ GameEndsMessage Client::readGameEnds()
 }
 
 /// Reads a DO_INIT message on the client socket. May throw Error.
+/// @return The DO_INIT message that has been read.
 DoInitMessage Client::readDoInit()
 {
     json msg = recvJson();
@@ -125,6 +134,7 @@ DoInitMessage Client::readDoInit()
 }
 
 /// Reads a DO_TURN message on the client socket. May throw Error.
+/// @return The DO_TURN message that has been read.
 DoTurnMessage Client::readDoTurn()
 {
     json msg = recvJson();
@@ -137,6 +147,7 @@ DoTurnMessage Client::readDoTurn()
 }
 
 /// Send a string message on the client socket. May throw Error.
+/// @param message The content to write on the socket.
 void Client::sendString(const std::string & message)
 {
     NETORCAI_ENFORCE(message.size() < 65536, "message is too big (%zu bytes)", message.size());
@@ -162,12 +173,15 @@ void Client::sendString(const std::string & message)
 }
 
 /// Send a JSON message on the client socket. May throw Error.
+/// @param message The content to write on the socket.
 void Client::sendJson(const json & message)
 {
     sendString(message.dump());
 }
 
 /// Send a LOGIN message on the client socket. May throw Error.
+/// @param nickname The desired nickname.
+/// @param role The desired role ("player", "visualization" or "game logic").
 void Client::sendLogin(const std::string & nickname, const std::string & role)
 {
     json msg;
@@ -179,6 +193,8 @@ void Client::sendLogin(const std::string & nickname, const std::string & role)
 }
 
 /// Send a TURN_ACK message on the client socket. May throw Error.
+/// @param turnNumber The number of the TURN message this ACK refers to.
+/// @param actions The decided actions.
 void Client::sendTurnAck(int turnNumber, const json & actions)
 {
     json msg;
@@ -190,6 +206,7 @@ void Client::sendTurnAck(int turnNumber, const json & actions)
 }
 
 /// Send a DO_INIT_ACK message on the client socket. May throw Error.
+/// @param initialGameState The initial game state.
 void Client::sendDoInitAck(const json & initialGameState)
 {
     json msg;
@@ -200,6 +217,8 @@ void Client::sendDoInitAck(const json & initialGameState)
 }
 
 /// Send a DO_TURN_ACK message on the client socket. May throw Error.
+/// @param gameState The current game state.
+/// @param winnerPlayerID The id of the current winner (or -1).
 void Client::sendDoTurnAck(const json & gameState, int winnerPlayerID)
 {
     json msg;

@@ -6,17 +6,24 @@
 namespace netorcai
 {
 
+/// netorcai's exception class
 struct Error : std::exception
 {
-    char text[1024];
+    char text[1024]; //!< The error message
 
-    Error(char const* fmt, ...) __attribute__((format(printf,2,3))) {
+#ifndef DOXYGEN_SHOULD_SKIP_THIS
+    /// Builds an Error with a printf-like format
+    Error(char const* fmt, ...) __attribute__((format(printf,2,3)))
+    {
         va_list ap;
         va_start(ap, fmt);
         vsnprintf(text, sizeof text, fmt, ap);
         va_end(ap);
     }
+#endif /* DOXYGEN_SHOULD_SKIP_THIS */
 
+    /// Gets Error's message
+    /// @return The Error's message.
     char const* what() const throw() { return text; }
 };
 
