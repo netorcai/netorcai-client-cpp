@@ -86,3 +86,9 @@ if gtest_dep.found()
     test('unittest', unittest_debug, is_parallel : false)
     test('unittest (NDEBUG)', unittest_ndebug, is_parallel : false)
 endif
+
+# Doxygen documentation.
+doxygen = find_program('doxygen', required: false)
+if doxygen.found()
+    run_target('doxygen-doc', command: 'doxygen/generate-doxydoc-meson.sh')
+endif
