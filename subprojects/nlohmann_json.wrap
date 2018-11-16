@@ -1,4 +1,11 @@
-[wrap-git]
-directory = nlohmann-json-git
-url = https://github.com/mpoquet/json.git
-revision = feature/meson-install-pkgconfig
+[wrap-file]
+directory = nlohmann_json-3.4.0
+lead_directory_missing = true
+
+source_url = https://github.com/nlohmann/json/releases/download/v3.4.0/include.zip
+source_filename = nlohmann-json-3.4.0.zip
+source_hash = bfec46fc0cee01c509cf064d2254517e7fa80d1e7647fea37cf81d97c5682bdc
+
+patch_url = https://github.com/mpoquet/nlohmann_json/archive/3.4.0.zip
+patch_filename = nlohmann-json-3.4.0-wrap.zip
+patch_hash = 17d62d74d8b45c37349fba643f0a9ad75af6651229c407652e7e819f4fc5a7d0

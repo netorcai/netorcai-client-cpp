@@ -24,7 +24,6 @@ else
     nlohmann_json_proj = subproject('nlohmann_json')
     nlohmann_json_dep = nlohmann_json_proj.get_variable('nlohmann_json_dep')
     pkgconfig_dependencies = [sfml_network_dep]
-    warning('If installing netorcai-client-cpp from this build, the installed netorcai-client-cpp.pc will NOT require nlohmann_json. This means netorcai-client-cpp.pc will be invalid if you explicitly uninstall nlohmann_json afterwards. If you prefer to generate a fully valid netorcai-client-cpp.pc, make sure that nlohmann_json is installed in your system (and that nlohmann_json.pc is reachable by pkg-config) before calling meson')
 endif
 
 netorcai_client_cpp = library('netorcai-client',
