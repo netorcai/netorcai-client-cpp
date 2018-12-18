@@ -3,6 +3,7 @@
 #include <string>
 
 #include <SFML/Network/TcpSocket.hpp>
+#include <SFML/Network/SocketSelector.hpp>
 
 #include <netorcai-client-cpp/json.hpp>
 #include <netorcai-client-cpp/message.hpp>
@@ -15,6 +16,7 @@ class Client
 {
 private:
     sf::TcpSocket _socket;
+    sf::SocketSelector _socketSelector;
 
 public:
     explicit Client() = default;
@@ -24,6 +26,7 @@ public:
     void close();
 
     std::string recvString();
+    std::string recvStringNonBlocking(bool & received, double millisecondsTimeout = 50);
     json recvJson();
 
     LoginAckMessage readLoginAck();

@@ -159,3 +159,48 @@ TEST(client, unexpectedMessageButNotKICK)
     int ret = pclose(n);
     EXPECT_NE(ret, -1) << "Error while calling pclose on netorcai's process";
 }
+
+TEST(client, nonBlockingRecv)
+{
+    auto n = launchNetorcaiWaitListening(2, 0);
+
+    Client gameLogic;
+    gameLogic.connect();
+    gameLogic.sendLogin("gl", "game logic");
+    gameLogic.readLoginAck();
+
+    Client player;
+    player.connect();
+    player.sendLogin("player", "player");
+
+    // Reads LOGIN_ACK with the non-blocking API. Should be fine.
+    bool received;
+    string msg = player.recvStringNonBlocking(received, 1000.0);
+    EXPECT_TRUE(received);
+    json msgJson = json::parse(msg);
+    EXPECT_EQ(msgJson["message_type"], "LOGIN_ACK");
+
+    // Waits for GAME_STARTS with the non-blocking API. Should timeout.
+    msg = player.recvStringNonBlocking(received, 50.0);
+    EXPECT_FALSE(received);
+
+    // Second player connects.
+    Client player2;
+    player2.connect();
+    player2.sendLogin("player", "player");
+    player2.readLoginAck();
+
+    // Game should start automatically.
+    gameLogic.readDoInit();
+    gameLogic.sendDoInitAck(json::parse(R"({"all_clients": {"gl": "C++"}})"));
+
+    // GAME_STARTS should be readable now.
+    msg = player.recvStringNonBlocking(received, 1000.0);
+    EXPECT_TRUE(received);
+    msgJson = json::parse(msg);
+    EXPECT_EQ(msgJson["message_type"], "GAME_STARTS");
+
+    system("killall netorcai");
+    int ret = pclose(n);
+    EXPECT_NE(ret, -1) << "Error while calling pclose on netorcai's process";
+}

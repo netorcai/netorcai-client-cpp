@@ -22,6 +22,7 @@ void Client::connect(const std::string & hostname, unsigned short port)
 {
     auto status = _socket.connect(sf::IpAddress(hostname), port, sf::milliseconds(500));
     NETORCAI_ENFORCE(status == sf::Socket::Done, "Cannot connect to %s:%hu", hostname.c_str(), port);
+    _socketSelector.add(_socket);
 }
 
 /// Close the socket.
@@ -57,6 +58,25 @@ std::string Client::recvString()
     NETORCAI_ENFORCE(receivedSize == contentSize, "Cannot read content.");
 
     return content;
+}
+
+/// Reads a string message on the client socket. May throw Error.
+/// @param[out] received Whether the string could be received.
+/// @param[in] millisecondsTimeout The maximum time allowed before receiving a message.
+/// @details This function may take more than millisecondsTimeout to return.
+///          If a message size could be read, the full message will be waited.
+/// @return If a message could be read, it is returned and received=true.
+///         Otherwise, "" is returned and received=false.
+std::string Client::recvStringNonBlocking(bool & received, double millisecondsTimeout)
+{
+    if (_socketSelector.wait(sf::milliseconds(millisecondsTimeout)))
+    {
+        received = true;
+        return recvString();
+    }
+
+    received = false;
+    return "";
 }
 
 /// Reads a JSON message on the client socket. May throw Error.

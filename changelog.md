@@ -9,6 +9,9 @@ Its public API includes:
 
 [//]: =========================================================================
 ## [Unreleased]
+### Added
+- New `Client::recvStringNonBlocking` method,
+  which allows reading on the socket with a timeout.
 
 [//]: =========================================================================
 ## 1.0.0 - 2018-11-12
