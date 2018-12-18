@@ -26,7 +26,7 @@ public:
     void close();
 
     std::string recvString();
-    std::string recvStringNonBlocking(bool & received, double millisecondsTimeout = 50);
+    bool recvStringNonBlocking(std::string & message, double millisecondsTimeout = 50);
     json recvJson();
 
     LoginAckMessage readLoginAck();

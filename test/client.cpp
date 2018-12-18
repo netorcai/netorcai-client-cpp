@@ -174,14 +174,14 @@ TEST(client, nonBlockingRecv)
     player.sendLogin("player", "player");
 
     // Reads LOGIN_ACK with the non-blocking API. Should be fine.
-    bool received;
-    string msg = player.recvStringNonBlocking(received, 1000.0);
+    string msg;
+    bool received = player.recvStringNonBlocking(msg, 1000.0);
     EXPECT_TRUE(received);
     json msgJson = json::parse(msg);
     EXPECT_EQ(msgJson["message_type"], "LOGIN_ACK");
 
     // Waits for GAME_STARTS with the non-blocking API. Should timeout.
-    msg = player.recvStringNonBlocking(received, 50.0);
+    received = player.recvStringNonBlocking(msg, 1000.0);
     EXPECT_FALSE(received);
 
     // Second player connects.
@@ -195,7 +195,7 @@ TEST(client, nonBlockingRecv)
     gameLogic.sendDoInitAck(json::parse(R"({"all_clients": {"gl": "C++"}})"));
 
     // GAME_STARTS should be readable now.
-    msg = player.recvStringNonBlocking(received, 1000.0);
+    received = player.recvStringNonBlocking(msg, 1000.0);
     EXPECT_TRUE(received);
     msgJson = json::parse(msg);
     EXPECT_EQ(msgJson["message_type"], "GAME_STARTS");

@@ -60,23 +60,23 @@ std::string Client::recvString()
     return content;
 }
 
-/// Reads a string message on the client socket. May throw Error.
-/// @param[out] received Whether the string could be received.
+/// Reads a string message on the client socket with a given timeout. May throw Error.
+/// @param[out] message The message read.
 /// @param[in] millisecondsTimeout The maximum time allowed before receiving a message.
 /// @details This function may take more than millisecondsTimeout to return.
-///          If a message size could be read, the full message will be waited.
-/// @return If a message could be read, it is returned and received=true.
-///         Otherwise, "" is returned and received=false.
-std::string Client::recvStringNonBlocking(bool & received, double millisecondsTimeout)
+///          If a message size could be read before timeout, the full message reception will be waited for.
+/// @return If a message could be read, true is returned and message is set.
+///         Otherwise, false is returned and message="".
+bool Client::recvStringNonBlocking(std::string & message, double millisecondsTimeout)
 {
     if (_socketSelector.wait(sf::milliseconds(millisecondsTimeout)))
     {
-        received = true;
-        return recvString();
+        message = recvString();
+        return true;
     }
 
-    received = false;
-    return "";
+    message = "";
+    return false;
 }
 
 /// Reads a JSON message on the client socket. May throw Error.
