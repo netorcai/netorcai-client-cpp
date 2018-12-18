@@ -43,6 +43,7 @@ netorcai_client_cpp_dep = declare_dependency(
 install_headers(
     'src/netorcai-client-cpp/client.hpp',
     'src/netorcai-client-cpp/error.hpp',
+    'src/netorcai-client-cpp/json.hpp',
     'src/netorcai-client-cpp/message.hpp',
     subdir: 'netorcai-client-cpp'
 )
