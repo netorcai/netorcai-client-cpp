@@ -13,18 +13,7 @@ src = [
 incdir = include_directories('src')
 
 sfml_network_dep = dependency('sfml-network', required: true)
-
-# Search for nlohmann_json in the system.
-# Use the system version if posible, or get/use the latest release otherwise.
-nlohmann_json_dep = dependency('nlohmann_json', required: false)
-
-if nlohmann_json_dep.found()
-    pkgconfig_dependencies = [sfml_network_dep, nlohmann_json_dep]
-else
-    nlohmann_json_proj = subproject('nlohmann_json')
-    nlohmann_json_dep = nlohmann_json_proj.get_variable('nlohmann_json_dep')
-    pkgconfig_dependencies = [sfml_network_dep]
-endif
+nlohmann_json_dep = dependency('nlohmann_json', required: true)
 
 netorcai_client_cpp = library('netorcai-client',
     src,
@@ -53,7 +42,7 @@ pkgc = import('pkgconfig')
 pkgc.generate(name: 'netorcai-client-cpp',
     libraries: netorcai_client_cpp,
     version: meson.project_version(),
-    requires: pkgconfig_dependencies,
+    requires: [sfml_network_dep, nlohmann_json_dep],
     description: 'A netorcai client library.'
 )
 
