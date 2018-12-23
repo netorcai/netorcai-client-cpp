@@ -1,6 +1,11 @@
 language: nix
 nix: 2.1.1
 
+before_script:
+  # Fix nix installation...
+  - export PKG_CONFIG_PATH=${PKG_CONFIG_PATH}:${HOME}/.nix-profile/lib/pkgconfig
+  - export LD_LIBRARY_PATH=${LD_LIBRARY_PATH}:${HOME}/.nix-profile/lib
+
 script:
   # install netorcai
   - nix-env -f https://github.com/netorcai/pkgs/archive/master.tar.gz -iA netorcai_dev
