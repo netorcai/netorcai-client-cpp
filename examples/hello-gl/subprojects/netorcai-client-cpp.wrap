@@ -1,4 +1,0 @@
-[wrap-git]
-directory = netorcai-client-cpp-git
-url = https://github.com/netorcai/netorcai-client-cpp.git
-revision = master
