@@ -28,7 +28,7 @@ int main()
         {
             printf("Waiting for TURN... "); fflush(stdout);
             const TurnMessage turn = c.readTurn();
-            c.sendTurnAck(turn.turnNumber, json::parse(R"([{"player": "D"}])"));
+            c.sendTurnAck(turn.turnNumber, json::parse(R"([{"player": "C++"}])"));
             printf("done\n");
         }
 

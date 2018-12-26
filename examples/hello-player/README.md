@@ -1,4 +1,4 @@
-[![Unlicense](https://img.shields.io/badge/unliense-public%20domain-brightgreen.svg)](http://unlicense.org/)
+[![Unlicense](https://img.shields.io/badge/unlicense-public%20domain-brightgreen.svg)](http://unlicense.org/)
 
 Build instructions
 ------------------

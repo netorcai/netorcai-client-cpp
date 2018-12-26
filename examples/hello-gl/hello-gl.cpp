@@ -22,14 +22,14 @@ int main()
 
         printf("Waiting for DO_INIT... "); fflush(stdout);
         const DoInitMessage doInit = c.readDoInit();
-        c.sendDoInitAck(json::parse(R"({"all_clients": {"gl": "D"}})"));
+        c.sendDoInitAck(json::parse(R"({"all_clients": {"gl": "C++"}})"));
         printf("done\n");
 
         for (int turn = 0; turn < doInit.nbTurnsMax; turn++)
         {
             printf("Waiting for DO_TURN %d... ", turn); fflush(stdout);
             const DoTurnMessage doTurn = c.readDoTurn();
-            c.sendDoTurnAck(json::parse(R"({"all_clients": {"gl": "D"}})"), -1);
+            c.sendDoTurnAck(json::parse(R"({"all_clients": {"gl": "C++"}})"), -1);
             printf("done\n");
         }
 
