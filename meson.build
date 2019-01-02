@@ -1,5 +1,5 @@
 project('netorcai-client', 'cpp',
-    version: '1.0.0-dev',
+    version: '1.1.0',
     meson_version: '>=0.46.0',
     default_options: ['cpp_std=c++17'])
 

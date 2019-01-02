@@ -9,6 +9,9 @@ Its public API includes:
 
 [//]: =========================================================================
 ## [Unreleased]
+
+[//]: =========================================================================
+## [1.1.0] - 2019-01-02
 ### Added
 - New `Client::recvStringNonBlocking` method,
   which allows reading on the socket with a timeout.
@@ -25,4 +28,5 @@ Its public API includes:
 [changelog]: http://keepachangelog.com/en/1.0.0/
 [semver]: http://semver.org/spec/v2.0.0.html
 
-[Unreleased]: https://github.com/netorcai/netorcai-client-cpp/compare/v1.0.0...master
+[Unreleased]: https://github.com/netorcai/netorcai-client-cpp/compare/v1.1.0...master
+[Unreleased]: https://github.com/netorcai/netorcai-client-cpp/compare/v1.0.0...v1.1.0
