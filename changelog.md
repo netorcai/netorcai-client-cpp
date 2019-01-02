@@ -13,6 +13,10 @@ Its public API includes:
 - New `Client::recvStringNonBlocking` method,
   which allows reading on the socket with a timeout.
 
+### Fixed
+- Multi-part TCP messages were not read/sent correctly.
+  These operations should now be more robust.
+
 [//]: =========================================================================
 ## 1.0.0 - 2018-11-12
 - Initial release.

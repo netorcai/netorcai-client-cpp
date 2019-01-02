@@ -37,10 +37,10 @@ std::string Client::recvString()
 {
     // Read content size
     uint8_t contentSizeBuf[2];
-    std::size_t receivedSize;
-    auto status = _socket.receive((void*)contentSizeBuf, 2, receivedSize);
-    NETORCAI_ENFORCE(status == sf::Socket::Done, "Cannot read content size.");
-    NETORCAI_ENFORCE(receivedSize == 2, "Cannot read content size.");
+    std::size_t bytesCount;
+    auto status = _socket.receive((void*)contentSizeBuf, 2, bytesCount);
+    NETORCAI_ENFORCE(status == sf::Socket::Done, "Cannot read content size (socket error).");
+    NETORCAI_ENFORCE(bytesCount == 2, "Cannot read content size (remote socket closed?).");
 
     // Convert from little endian to native endian if needed
     if constexpr (netorcai::endian::native == netorcai::endian::big)
@@ -53,9 +53,16 @@ std::string Client::recvString()
     // Read content
     std::string content;
     content.resize(contentSize);
-    status = _socket.receive((void*)content.data(), contentSize, receivedSize);
-    NETORCAI_ENFORCE(status == sf::Socket::Done, "Cannot read content.");
-    NETORCAI_ENFORCE(receivedSize == contentSize, "Cannot read content.");
+    std::size_t receivedBytes = 0;
+
+    while (receivedBytes < (std::size_t)contentSize)
+    {
+        status = _socket.receive((void*)(content.data() + receivedBytes), contentSize - receivedBytes, bytesCount);
+        NETORCAI_ENFORCE(status == sf::Socket::Done || status == sf::Socket::Partial, "Cannot read content (socket error).");
+        NETORCAI_ENFORCE(bytesCount > 0, "Cannot read content (remote socket closed?).");
+
+        receivedBytes += bytesCount;
+    }
 
     return content;
 }
@@ -182,14 +189,20 @@ void Client::sendString(const std::string & message)
         std::swap(contentSizeBuf[0], contentSizeBuf[1]);
     }
 
-    size_t sentSize;
-    auto status = _socket.send((void*)contentSizeBuf, 2, sentSize);
-    NETORCAI_ENFORCE(status == sf::Socket::Done, "Cannot send content size.");
-    NETORCAI_ENFORCE(sentSize == 2, "Cannot send content size.");
+    size_t bytesCount;
+    auto status = _socket.send((void*)contentSizeBuf, 2, bytesCount);
+    NETORCAI_ENFORCE(status == sf::Socket::Done, "Cannot send content size (socket error).");
+    NETORCAI_ENFORCE(bytesCount == 2, "Cannot send content size (remote socket closed?).");
 
-    status = _socket.send((void*)message.data(), contentSize, sentSize);
-    NETORCAI_ENFORCE(status == sf::Socket::Done, "Cannot send content.");
-    NETORCAI_ENFORCE(sentSize == contentSize, "Cannot send content.");
+    size_t sentBytes = 0;
+    while (sentBytes < (size_t) contentSize)
+    {
+        status = _socket.send((void*)(message.data() + sentBytes), contentSize - sentBytes, bytesCount);
+        NETORCAI_ENFORCE(status == sf::Socket::Done || status == sf::Socket::Partial, "Cannot send content (socket error).");
+        NETORCAI_ENFORCE(bytesCount > 0, "Cannot send content (remote socket closed?).");
+
+        sentBytes += bytesCount;
+    }
 }
 
 /// Send a JSON message on the client socket. May throw Error.
