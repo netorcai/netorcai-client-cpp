@@ -39,6 +39,7 @@ GameStartsMessage parseGameStartsMessage(const netorcai::json & object)
 
     m.playerID = object["player_id"];
     m.nbPlayers = object["nb_players"];
+    m.nbSpecialPlayers = object["nb_special_players"];
     m.nbTurnsMax = object["nb_turns_max"];
     m.msBeforeFirstTurn = object["milliseconds_before_first_turn"];
     m.msBetweenTurns = object["milliseconds_between_turns"];
@@ -80,6 +81,7 @@ DoInitMessage parseDoInitMessage(const json & object)
 {
     DoInitMessage m;
     m.nbPlayers = object["nb_players"];
+    m.nbSpecialPlayers = object["nb_special_players"];
     m.nbTurnsMax = object["nb_turns_max"];
 
     return m;

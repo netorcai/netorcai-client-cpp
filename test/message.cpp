@@ -69,6 +69,7 @@ TEST(message, parseGameStartsMessage)
         }
       ],
       "nb_players": 4,
+      "nb_special_players": 0,
       "nb_turns_max": 100,
       "milliseconds_before_first_turn": 1000,
       "milliseconds_between_turns": 1000,
@@ -83,6 +84,7 @@ TEST(message, parseGameStartsMessage)
     EXPECT_EQ(m.playersInfo[0].remoteAddress, "127.0.0.1:59840");
     EXPECT_EQ(m.playersInfo[0].isConnected, true);
     EXPECT_EQ(m.nbPlayers, 4);
+    EXPECT_EQ(m.nbSpecialPlayers, 0);
     EXPECT_EQ(m.nbTurnsMax, 100);
     EXPECT_EQ(m.msBeforeFirstTurn, 1000);
     EXPECT_EQ(m.msBetweenTurns, 1000);
@@ -133,11 +135,13 @@ TEST(message, parseDoInitMessage)
     const string s = R"({
       "message_type": "DO_INIT",
       "nb_players": 4,
+      "nb_special_players": 0,
       "nb_turns_max": 100
     })";
 
     const DoInitMessage m = parseDoInitMessage(json::parse(s));
     EXPECT_EQ(m.nbPlayers, 4);
+    EXPECT_EQ(m.nbSpecialPlayers, 0);
     EXPECT_EQ(m.nbTurnsMax, 100);
 }
 

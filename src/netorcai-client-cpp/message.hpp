@@ -25,8 +25,9 @@ namespace netorcai
     /// Content of a GAME_STARTS metaprotocol message
     struct GameStartsMessage
     {
-        int playerID; //!< Caller's player identifier. players: [0..nbPlayers[. visu: -1
+        int playerID; //!< Caller's player identifier. players: [0..nbPlayers+nbSpecialPlayers[. visu: -1
         int nbPlayers; //!< Number of players in the game
+        int nbSpecialPlayers; //!< Number of special players in the game
         int nbTurnsMax; //!< Maximum number of turns. Game can finish before it
         double msBeforeFirstTurn; //!< Time before the first TURN is sent (in ms)
         double msBetweenTurns; //!< Time between two consecutive TURNs (in ms)
@@ -53,6 +54,7 @@ namespace netorcai
     struct DoInitMessage
     {
         int nbPlayers; //!< The number of players of the game
+        int nbSpecialPlayers; //!< Number of special players in the game
         int nbTurnsMax; //!< The maximum number of turns of the game
     };
 
