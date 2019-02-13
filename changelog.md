@@ -9,6 +9,9 @@ Its public API includes:
 
 [//]: =========================================================================
 ## [Unreleased]
+### Changed
+- Message header is now 32-bit (netorcai metaprotocol update).
+
 ### Added
 - Support for special players (netorcai metaprotocol update).
 - Metaprotocol version handshake (netorcai metaprotocol update).
