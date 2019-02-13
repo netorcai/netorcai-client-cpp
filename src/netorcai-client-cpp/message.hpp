@@ -19,7 +19,7 @@ namespace netorcai
     /// Content of a LOGIN_ACK metaprotocol message
     struct LoginAckMessage
     {
-        // ¯\_(ツ)_/¯
+        std::string metaprotocolVersion; //!< Metaprotocol version of netorcai
     };
 
     /// Content of a GAME_STARTS metaprotocol message
@@ -74,6 +74,7 @@ namespace netorcai
 
     PlayerInfo parsePlayerInfo(const json & object);
     std::vector<PlayerInfo> parsePlayersInfo(const json & array);
+    LoginAckMessage parseLoginAckMessage(const json & object);
     GameStartsMessage parseGameStartsMessage(const json & object);
     GameEndsMessage parseGameEndsMessage(const json & object);
     TurnMessage parseTurnMessage(const json & object);

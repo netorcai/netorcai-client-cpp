@@ -11,6 +11,7 @@ Its public API includes:
 ## [Unreleased]
 ### Added
 - Support for special players (netorcai metaprotocol update).
+- Metaprotocol version handshake (netorcai metaprotocol update).
 
 [//]: =========================================================================
 ## [1.1.0] - 2019-01-02

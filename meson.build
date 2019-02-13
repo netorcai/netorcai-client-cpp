@@ -9,6 +9,8 @@ src = [
     'src/netorcai-client-cpp/error.hpp',
     'src/netorcai-client-cpp/message.hpp',
     'src/netorcai-client-cpp/message.cpp',
+    'src/netorcai-client-cpp/version.hpp',
+    'src/netorcai-client-cpp/version.cpp',
 ]
 
 incdir = include_directories('src')
@@ -35,6 +37,7 @@ install_headers(
     'src/netorcai-client-cpp/error.hpp',
     'src/netorcai-client-cpp/json.hpp',
     'src/netorcai-client-cpp/message.hpp',
+    'src/netorcai-client-cpp/version.hpp',
     subdir: 'netorcai-client-cpp'
 )
 

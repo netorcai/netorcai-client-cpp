@@ -1,5 +1,6 @@
 #include <netorcai-client-cpp/message.hpp>
 #include <netorcai-client-cpp/error.hpp>
+#include <netorcai-client-cpp/version.hpp>
 
 namespace netorcai
 {
@@ -30,6 +31,21 @@ std::vector<PlayerInfo> parsePlayersInfo(const netorcai::json & array)
     }
 
     return infos;
+}
+
+/// Parses a LOGIN_ACK metaprotocol message
+LoginAckMessage parseLoginAckMessage(const netorcai::json & object)
+{
+    LoginAckMessage m;
+
+    m.metaprotocolVersion = object["metaprotocol_version"];
+    if (m.metaprotocolVersion != metaprotocolVersion())
+    {
+        printf("Warning: netorcai uses version '%s' while netorcai-client-cpp uses '%s'",
+            m.metaprotocolVersion.c_str(), metaprotocolVersion().c_str());
+    }
+
+    return m;
 }
 
 /// Parses a GAME_STARTS metaprotocol message

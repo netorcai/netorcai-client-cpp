@@ -7,6 +7,7 @@
 
 #include <netorcai-client-cpp/client.hpp>
 #include <netorcai-client-cpp/error.hpp>
+#include <netorcai-client-cpp/version.hpp>
 
 using namespace std;
 using namespace netorcai;
@@ -199,6 +200,24 @@ TEST(client, nonBlockingRecv)
     EXPECT_TRUE(received);
     msgJson = json::parse(msg);
     EXPECT_EQ(msgJson["message_type"], "GAME_STARTS");
+
+    system("killall netorcai");
+    int ret = pclose(n);
+    EXPECT_NE(ret, -1) << "Error while calling pclose on netorcai's process";
+}
+
+TEST(client, nonCriticalNonMatchingMetaprotocolVersion)
+{
+    FILE * n = launchNetorcaiWaitListening(10, 20); // not autostarting here
+
+    netorcai::minorVersion += 1;
+
+    Client c;
+    c.connect();
+    c.sendLogin("cpptest", "player");
+    c.readLoginAck();
+
+    netorcai::minorVersion -= 1;
 
     system("killall netorcai");
     int ret = pclose(n);

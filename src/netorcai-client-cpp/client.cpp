@@ -1,5 +1,6 @@
 #include <netorcai-client-cpp/client.hpp>
 #include <netorcai-client-cpp/error.hpp>
+#include <netorcai-client-cpp/version.hpp>
 
 #include <netorcai-client-cpp/endian.hpp>
 #include <utility>
@@ -99,7 +100,7 @@ LoginAckMessage Client::readLoginAck()
 {
     json msg = recvJson();
     if (msg["message_type"] == "LOGIN_ACK")
-        return LoginAckMessage();
+        return parseLoginAckMessage(msg);
     else if (msg["message_type"] == "KICK")
         throw Error("Kicked from netorai. Reason: %s", ((std::string)msg["kick_reason"]).c_str());
     else
@@ -221,6 +222,7 @@ void Client::sendLogin(const std::string & nickname, const std::string & role)
     msg["message_type"] = "LOGIN";
     msg["nickname"] = nickname;
     msg["role"] = role;
+    msg["metaprotocol_version"] = metaprotocolVersion();
 
     sendJson(msg);
 }
