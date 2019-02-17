@@ -11,6 +11,7 @@ Its public API includes:
 ## [Unreleased]
 ### Changed
 - Message header is now 32-bit (netorcai metaprotocol update).
+- License is now LGPL-3.0 — goal is to allow client programs to be non-GPL.
 
 ### Added
 - Support for special players (netorcai metaprotocol update).
