@@ -2,14 +2,29 @@
 #include <netorcai-client-cpp/error.hpp>
 #include <netorcai-client-cpp/version.hpp>
 
-#include <netorcai-client-cpp/endian.hpp>
 #include <utility>
 
 #include <SFML/Network/IpAddress.hpp>
 #include <SFML/Network/Socket.hpp>
 
+bool isBigEndian()
+{
+    union
+    {
+        uint32_t i;
+        char c[4];
+    } bint = {0x01020304};
+
+    return bint.c[0] == 1;
+}
+
 namespace netorcai
 {
+
+Client::Client()
+{
+    _requiresEndiannessConversion = isBigEndian();
+}
 
 Client::~Client()
 {
@@ -42,9 +57,10 @@ std::string Client::recvString()
     auto status = _socket.receive((void*)contentSizeBuf, 4, bytesCount);
     NETORCAI_ENFORCE(status == sf::Socket::Done, "Cannot read content size (socket error).");
     NETORCAI_ENFORCE(bytesCount == 4, "Cannot read content size (remote socket closed?).");
+    NETORCAI_ENFORCE(contentSizeBuf[3] == 0, "Invalid content size: last byte is not 0");
 
     // Convert from little endian to native endian if needed
-    if constexpr (netorcai::endian::native == netorcai::endian::big)
+    if (_requiresEndiannessConversion)
     {
         std::swap(contentSizeBuf[0], contentSizeBuf[3]);
         std::swap(contentSizeBuf[1], contentSizeBuf[2]);
@@ -186,7 +202,7 @@ void Client::sendString(const std::string & message)
     *((uint32_t*)contentSizeBuf) = contentSize;
 
     // Convert from native endian to little endian if needed
-    if constexpr (netorcai::endian::native == netorcai::endian::big)
+    if (_requiresEndiannessConversion)
     {
         std::swap(contentSizeBuf[0], contentSizeBuf[3]);
         std::swap(contentSizeBuf[1], contentSizeBuf[2]);

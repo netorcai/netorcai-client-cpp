@@ -17,9 +17,10 @@ class Client
 private:
     sf::TcpSocket _socket;
     sf::SocketSelector _socketSelector;
+    bool _requiresEndiannessConversion;
 
 public:
-    explicit Client() = default;
+    explicit Client();
     ~Client();
 
     void connect(const std::string & hostname = "localhost", unsigned short port = 4242);
